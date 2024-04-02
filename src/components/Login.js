@@ -1,22 +1,40 @@
 import React, { useRef } from 'react'
 import Header from './Header'
-import { useState} from 'react'
+import { useState, useEffect} from 'react'
 import { checkValidData} from '../utils/validate'
 import {auth} from "../utils/firebase"
-import { createUserWithEmailAndPassword,  signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword,  signInWithEmailAndPassword,onAuthStateChanged, updateProfile } from "firebase/auth";
+import { useDispatch } from 'react-redux';
+import {addUser, removeUser} from "../utils/userSlice";
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
 
   const[isSignInForm, setSignInForm] = useState(true);
   const[errorMessage, setErrorMessage] = useState(" ");
 
-  // const name = useRef();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in
+        const {uid, email, displayName} = user;
+        dispatch(addUser({uid : uid, email: email, displayName : displayName}));
+      } else {
+        // User is signed out
+        dispatch(removeUser());
+      }
+    }); 
+  },[])
+
+  const name = useRef();
   const email = useRef();
   const password = useRef();
 
   const handleButtonClick=()=>{
-    // console.log(name.current.value);
-  
+
   const message = checkValidData(email.current.value, password.current.value);
   setErrorMessage(message);
 
@@ -26,8 +44,27 @@ const Login = () => {
     .then((userCredential) => {
     // Signed up 
     const user = userCredential.user;
+    updateProfile(user, {
+      displayName: name.current.value, 
+      photoURL: "https://example.com/jane-q-user/profile.jpg"
+    }).then(() => {
+      const{uid, email, displayName}=auth.currentUser;
+      dispatch(
+        addUser(
+          {
+            uid : uid,
+            email : email,
+            displayName : displayName,
+          }
+        )
+      );
+      navigate("/browse");
+    }).catch((error) => {
+      // An error occurred
+      setErrorMessage(error.Message);
+    });
     console.log(user);
-    // ...
+    
     })
     .catch((error) => {
     const errorCode = error.code;
@@ -43,7 +80,7 @@ const Login = () => {
     .then((userCredential) => {
     // Signed in 
     const user = userCredential.user;
-    // ...
+    navigate("/browse");
     })
     .catch((error) => {
     const errorCode = error.code;
@@ -56,12 +93,13 @@ const Login = () => {
   const toggleSignInForm=()=>{
     setSignInForm(!isSignInForm);
   }
+
   return (
     <div>
       <Header/> 
       <div className='absolute'>
         <img 
-          src="https://img.goodfon.com/original/1920x1080/1/61/fon-netflix-logo-raduga-tsvet-fon-background-skachat-oboi-sk.jpg"
+          src="https://user-images.githubusercontent.com/33485020/108069438-5ee79d80-7089-11eb-8264-08fdda7e0d11.jpg"
           alt="bg image"
         />
       </div>
@@ -75,7 +113,7 @@ const Login = () => {
           !isSignInForm && 
           (
           <input 
-          // ref = {name}
+          ref = {name}
           type="text" 
           placeholder='Full Name' 
           className='p-4 my-4 w-full bg-gray-700 '/>
