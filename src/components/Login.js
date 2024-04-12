@@ -3,7 +3,7 @@ import Header from './Header'
 import { useState, useEffect} from 'react'
 import { checkValidData} from '../utils/validate'
 import {auth} from "../utils/firebase"
-import { createUserWithEmailAndPassword,  signInWithEmailAndPassword,onAuthStateChanged, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword,  signInWithEmailAndPassword,updateProfile } from "firebase/auth";
 import { useDispatch } from 'react-redux';
 import {addUser, removeUser} from "../utils/userSlice";
 import { useNavigate } from 'react-router-dom'
@@ -16,18 +16,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(()=>{
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // User is signed in
-        const {uid, email, displayName} = user;
-        dispatch(addUser({uid : uid, email: email, displayName : displayName}));
-      } else {
-        // User is signed out
-        dispatch(removeUser());
-      }
-    }); 
-  },[])
 
   const name = useRef();
   const email = useRef();
@@ -58,7 +46,7 @@ const Login = () => {
           }
         )
       );
-      navigate("/browse");
+   
     }).catch((error) => {
       // An error occurred
       setErrorMessage(error.Message);
@@ -80,7 +68,7 @@ const Login = () => {
     .then((userCredential) => {
     // Signed in 
     const user = userCredential.user;
-    navigate("/browse");
+ 
     })
     .catch((error) => {
     const errorCode = error.code;
@@ -138,7 +126,7 @@ const Login = () => {
         <p 
           className='p-4 my-4' 
           onClick={toggleSignInForm}>
-          {isSignInForm? "New to netflix, Sign up now" : "Already signed in"}
+          {isSignInForm? "New to netflix, Sign up now" : "Already have an account? Sign In"}
         </p>
       </form>
     </div>
