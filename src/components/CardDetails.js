@@ -25,8 +25,11 @@ const getCardDetails = async()=>{
   const movieCast = useCast();
     
   const details = useSelector((store)=>store.details);
+  console.log(details);
 
   const cast = useSelector((store)=>store.details);
+  console.log(cast);
+
   return(
     details.cardDetails && (
       <div className="font-mono ">
@@ -51,21 +54,22 @@ const getCardDetails = async()=>{
               <h2 className="font-bold">Overview : </h2><br/>
               {details.cardDetails.overview}
             </div>
-            <div className='border-b-2 border-neutral-600'> Language : {details.cardDetails.original_language}</div>
-            <div className='border-b-2 border-neutral-600'> Status : {details.cardDetails.status}</div>
-            <div className='border-b-2 border-neutral-600'>Release Date : {details.cardDetails.release_date}</div>
+            <div className='border-b-2 border-red-500'> Language : {details.cardDetails.original_language}</div>
+            <div className='border-b-2 border-red-500'> Status : {details.cardDetails.status}</div>
+            <div className='border-b-2 border-red-500'>Release Date : {details.cardDetails.release_date}</div>
             </div>
             
     </div>
     <div className='bg-neutral-900'>
-    <div className='text-3xl bg-neutral-900 font-bold text-left mx-20 text-red-500'>Movie Cast</div>
+    <div className='text-2xl bg-neutral-900 font-bold text-left mx-20 px-1 text-red-500'>Movie Cast</div>
    <div className='flex overflow-x-scroll bg-neutral-900 text-1xl text-neutral-300 mx-20'>
    
    <div className='flex'>
     {
-      cast.movieCast.cast.map((casts)=>(
+     cast.movieCast && cast.movieCast.cast && ( cast.movieCast.cast.map((casts)=>(
         <MovieCast name={casts.original_name} photo={casts.profile_path}/>
     )
+     )
     )
     }
    </div>
