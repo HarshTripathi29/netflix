@@ -56,16 +56,16 @@ const user = useSelector((store)=>store.user)
 
         <button 
           onClick={handleGptSearchClick}
-          className='py-2 px-4 my-2 mx-4 bg-purple-800 text-white rounded-lg'>
+          className='px-4 my-2 mx-4 h-12 bg-red-500 text-white rounded-lg'>
           GPTSearch
         </button>
         <img 
-          className='w-12 h-12'
+          className='w-12 h-12 py-2 my-2 '
           alt="user"
           src="https://cdn-icons-png.freepik.com/512/6406/6406635.png"
         />
         <button 
-        className='py-2 px-4 my-2 mx-4 bg-purple-800 text-white rounded-lg'
+        className='px-4 my-2 mx-4 h-12 bg-red-500 text-white rounded-lg'
         onClick={handleSignOut}>SignOut</button>
       </div>
       )}

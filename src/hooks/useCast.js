@@ -16,11 +16,7 @@ const useCast = () => {
     useEffect(()=>{
         getCast();
     },[]);
-  return (
-   <>
-
-   </>
-  )
+ 
 }
 
 export default useCast
